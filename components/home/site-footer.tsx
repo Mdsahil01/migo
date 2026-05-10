@@ -16,7 +16,7 @@ export function SiteFooter() {
         </div>
         <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-zinc-500">
           <Link
-            href="#events"
+            href="/events"
             className="transition hover:text-zinc-300"
           >
             Events

@@ -32,7 +32,7 @@ export function Hero() {
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
           <Link
-            href="#events"
+            href="/events"
             className="inline-flex items-center justify-center rounded-full bg-emerald-500 px-8 py-3.5 text-base font-semibold text-zinc-950 shadow-lg shadow-emerald-500/25 outline-none transition hover:-translate-y-0.5 hover:bg-emerald-400 hover:shadow-emerald-500/40 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
           >
             Explore Events

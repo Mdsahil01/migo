@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useState } from "react";
 
 const navLinks = [
-  { href: "#events", label: "Events" },
-  { href: "#teams", label: "Teams" },
-  { href: "#features", label: "Features" },
+  { href: "/events", label: "Events" },
+  { href: "/#teams", label: "Teams" },
+  { href: "/#features", label: "Features" },
 ] as const;
 
 export function Navbar() {
@@ -47,7 +47,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <Link
-            href="#events"
+            href="/events"
             className="hidden rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-zinc-950 shadow-lg shadow-emerald-500/25 outline-none transition hover:bg-emerald-400 hover:shadow-emerald-500/40 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 sm:inline-flex"
           >
             Explore Events
@@ -107,7 +107,7 @@ export function Navbar() {
             </Link>
           ))}
           <Link
-            href="#events"
+            href="/events"
             className="mt-2 rounded-full bg-emerald-500 px-4 py-3 text-center text-sm font-semibold text-zinc-950 shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400"
             onClick={() => setOpen(false)}
           >
