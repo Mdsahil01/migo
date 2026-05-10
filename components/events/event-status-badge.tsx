@@ -30,12 +30,29 @@ const statusStyles: Record<
   },
 };
 
-type EventStatusBadgeProps = {
-  status: RegistrationStatus;
+type CustomBadge = {
+  label: string;
+  className: string;
 };
 
-export function EventStatusBadge({ status }: EventStatusBadgeProps) {
-  const badge = statusStyles[status];
+type EventStatusBadgeProps =
+  | {
+      status: RegistrationStatus;
+      custom?: never;
+    }
+  | {
+      status?: never;
+      custom: CustomBadge;
+    };
+
+function isCustomBadge(
+  props: EventStatusBadgeProps,
+): props is { custom: CustomBadge; status?: never } {
+  return "custom" in props;
+}
+
+export function EventStatusBadge(props: EventStatusBadgeProps) {
+  const badge = isCustomBadge(props) ? props.custom : statusStyles[props.status];
 
   return (
     <span

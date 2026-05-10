@@ -5,6 +5,8 @@ import { useCallback } from "react";
 
 type EventDetailActionsProps = {
   event: HackathonEvent;
+  approved?: boolean;
+  onApprove?: () => void;
 };
 
 function escapeIcsText(value: string) {
@@ -43,12 +45,11 @@ function buildIcsCalendar(event: HackathonEvent) {
   return lines.join("\r\n");
 }
 
-export function EventDetailActions({ event }: EventDetailActionsProps) {
-  const onApprove = () => {
-    window.alert(
-      `"${event.title}" marked as approved in this demo. Wire this button to your API when you're ready.`,
-    );
-  };
+export function EventDetailActions({
+  event,
+  approved = false,
+  onApprove,
+}: EventDetailActionsProps) {
 
   const onAddToCalendar = useCallback(() => {
     const blob = new Blob([buildIcsCalendar(event)], {
@@ -67,9 +68,10 @@ export function EventDetailActions({ event }: EventDetailActionsProps) {
       <button
         type="button"
         onClick={onApprove}
-        className="inline-flex flex-1 min-w-[9rem] items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-zinc-950 shadow-lg shadow-emerald-500/25 outline-none transition hover:bg-emerald-400 hover:shadow-emerald-500/40 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+        disabled={approved || !onApprove}
+        className="inline-flex flex-1 min-w-[9rem] items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-zinc-950 shadow-lg shadow-emerald-500/25 outline-none transition hover:bg-emerald-400 hover:shadow-emerald-500/40 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 disabled:cursor-not-allowed disabled:bg-emerald-500/60 disabled:text-zinc-200 disabled:shadow-none disabled:hover:bg-emerald-500/60"
       >
-        Approve event
+        {approved ? "Approved" : "Approve event"}
       </button>
       <button
         type="button"
