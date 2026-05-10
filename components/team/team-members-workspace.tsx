@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 export type TeamMember = {
   name: string;
   role: string;
+  responsibility: string;
   skills: string[];
   githubUsername: string;
   participationCount: number;
@@ -79,6 +80,7 @@ export function TeamMembersWorkspace({
     const newMember: TeamMember = {
       name,
       role,
+      responsibility: "Event Research",
       githubUsername,
       skills: ["New member"],
       participationCount: 0,
@@ -134,6 +136,14 @@ export function TeamMembersWorkspace({
               >
                 <h3 className="text-lg font-semibold text-white">{member.name}</h3>
                 <p className="mt-1 text-sm font-medium text-emerald-300">{member.role}</p>
+                <div className="mt-3 rounded-lg border border-cyan-500/35 bg-cyan-500/10 px-3 py-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-cyan-300">
+                    Responsibility
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-cyan-100">
+                    {member.responsibility}
+                  </p>
+                </div>
 
                 <dl className="mt-5 grid gap-3 text-sm">
                   <div className="flex gap-2">

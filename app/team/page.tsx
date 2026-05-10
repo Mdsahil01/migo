@@ -19,6 +19,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Aarav Sharma",
     role: "Product Lead",
+    responsibility: "Pitch Deck",
     skills: ["Roadmapping", "Hackathon Ops", "User Research"],
     githubUsername: "aaravbuilds",
     participationCount: 12,
@@ -26,6 +27,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Meera Nair",
     role: "Frontend Engineer",
+    responsibility: "Frontend Development",
     skills: ["React", "Tailwind CSS", "Design Systems"],
     githubUsername: "meeracodes",
     participationCount: 9,
@@ -33,6 +35,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Rohan Iqbal",
     role: "Backend Engineer",
+    responsibility: "Backend APIs",
     skills: ["Node.js", "APIs", "PostgreSQL"],
     githubUsername: "rohanapi",
     participationCount: 10,
@@ -40,6 +43,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Nisha Patel",
     role: "Developer Advocate",
+    responsibility: "Event Research",
     skills: ["Community", "Mentorship", "Event Hosting"],
     githubUsername: "nishadevrel",
     participationCount: 8,
@@ -47,6 +51,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Kabir Joshi",
     role: "Full-Stack Engineer",
+    responsibility: "Deployment",
     skills: ["TypeScript", "Testing", "Performance"],
     githubUsername: "kabirstack",
     participationCount: 11,
@@ -54,6 +59,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Sana Rahman",
     role: "Design Engineer",
+    responsibility: "UI/UX",
     skills: ["UX", "Prototyping", "Accessibility"],
     githubUsername: "sanaui",
     participationCount: 7,
