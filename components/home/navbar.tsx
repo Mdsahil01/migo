@@ -7,8 +7,6 @@ const navLinks = [
   { href: "/events", label: "Events" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/team", label: "Team" },
-  { href: "/#teams", label: "Teams" },
-  { href: "/#features", label: "Features" },
 ] as const;
 
 export function Navbar() {
