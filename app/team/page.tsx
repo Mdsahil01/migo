@@ -3,20 +3,16 @@ import Link from "next/link";
 
 import { Navbar } from "@/components/home/navbar";
 import { SiteFooter } from "@/components/home/site-footer";
+import {
+  TeamMembersWorkspace,
+  type TeamMember,
+} from "@/components/team/team-members-workspace";
 import { mockHackathonEvents } from "@/data/mock-events";
 
 export const metadata: Metadata = {
   title: "Team — MIGO",
   description:
     "Meet the MIGO core team, track current mission focus, and review delivery stats.",
-};
-
-type TeamMember = {
-  name: string;
-  role: string;
-  skills: string[];
-  githubUsername: string;
-  participationCount: number;
 };
 
 const teamMembers: TeamMember[] = [
@@ -80,33 +76,6 @@ const upcomingApprovedEvents = approvedEvents
 
 const currentMission = upcomingApprovedEvents[0];
 
-const totalParticipations = teamMembers.reduce(
-  (sum, member) => sum + member.participationCount,
-  0,
-);
-
-const averageParticipations = Math.round(totalParticipations / teamMembers.length);
-
-const teamStats = [
-  { label: "Core team", value: teamMembers.length.toString() },
-  { label: "Approved missions", value: approvedEvents.length.toString() },
-  { label: "Upcoming missions", value: upcomingApprovedEvents.length.toString() },
-  { label: "Avg participation", value: `${averageParticipations} events` },
-] as const;
-
-function TeamStatCard({ label, value }: { label: string; value: string }) {
-  return (
-    <article className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 shadow-lg shadow-black/20">
-      <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
-        {label}
-      </p>
-      <p className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-        {value}
-      </p>
-    </article>
-  );
-}
-
 export default function TeamPage() {
   return (
     <div className="min-h-full bg-zinc-950 text-zinc-100">
@@ -135,16 +104,6 @@ export default function TeamPage() {
               A lean student team shipping event operations, collaboration tools,
               and mission support for every hackathon cycle.
             </p>
-          </div>
-        </section>
-
-        <section className="px-4 py-10 sm:px-6 sm:py-14" aria-label="Team statistics">
-          <div className="mx-auto max-w-6xl">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {teamStats.map((stat) => (
-                <TeamStatCard key={stat.label} label={stat.label} value={stat.value} />
-              ))}
-            </div>
           </div>
         </section>
 
@@ -209,58 +168,12 @@ export default function TeamPage() {
           </div>
         </section>
 
-        <section className="px-4 pb-12 sm:px-6 sm:pb-16" aria-labelledby="team-members">
-          <div className="mx-auto max-w-6xl">
-            <h2
-              id="team-members"
-              className="text-xl font-semibold tracking-tight text-white sm:text-2xl"
-            >
-              Team members
-            </h2>
-            <p className="mt-2 max-w-2xl text-sm text-zinc-400 sm:text-base">
-              Core contributors driving approvals, product quality, and student
-              experience across every release.
-            </p>
+        <TeamMembersWorkspace
+          initialMembers={teamMembers}
+          approvedMissionsCount={approvedEvents.length}
+          upcomingMissionsCount={upcomingApprovedEvents.length}
+        />
 
-            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {teamMembers.map((member) => (
-                <article
-                  key={member.githubUsername}
-                  className="rounded-2xl border border-zinc-800 bg-zinc-900/45 p-5 shadow-lg shadow-black/20 transition hover:border-emerald-500/25 hover:bg-zinc-900/70"
-                >
-                  <h3 className="text-lg font-semibold text-white">{member.name}</h3>
-                  <p className="mt-1 text-sm font-medium text-emerald-300">{member.role}</p>
-
-                  <dl className="mt-5 grid gap-3 text-sm">
-                    <div className="flex gap-2">
-                      <dt className="w-24 shrink-0 text-zinc-500">GitHub</dt>
-                      <dd className="font-medium text-zinc-200">
-                        @{member.githubUsername}
-                      </dd>
-                    </div>
-                    <div className="flex gap-2">
-                      <dt className="w-24 shrink-0 text-zinc-500">Participation</dt>
-                      <dd className="font-medium text-zinc-200">
-                        {member.participationCount} events
-                      </dd>
-                    </div>
-                  </dl>
-
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {member.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="rounded-full border border-zinc-700 bg-zinc-950/60 px-2.5 py-1 text-xs font-medium text-zinc-300"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
       </main>
 
       <SiteFooter />
