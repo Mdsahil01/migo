@@ -7,6 +7,8 @@ type EventDetailActionsProps = {
   event: HackathonEvent;
   approved?: boolean;
   onApprove?: () => void;
+  initialAddedToCalendar?: boolean;
+  onCalendarAdded?: () => void;
 };
 
 function escapeIcsText(value: string) {
@@ -49,8 +51,10 @@ export function EventDetailActions({
   event,
   approved = false,
   onApprove,
+  initialAddedToCalendar = false,
+  onCalendarAdded,
 }: EventDetailActionsProps) {
-  const [addedToCalendar, setAddedToCalendar] = useState(false);
+  const [addedToCalendar, setAddedToCalendar] = useState(initialAddedToCalendar);
 
   const onAddToCalendar = useCallback(() => {
     const blob = new Blob([buildIcsCalendar(event)], {
@@ -63,7 +67,8 @@ export function EventDetailActions({
     anchor.click();
     URL.revokeObjectURL(url);
     setAddedToCalendar(true);
-  }, [event]);
+    onCalendarAdded?.();
+  }, [event, onCalendarAdded]);
 
   return (
     <div>

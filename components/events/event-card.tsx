@@ -41,19 +41,13 @@ export function EventCard({ event }: EventCardProps) {
         </div>
       </dl>
 
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="mt-6">
         <Link
           href={`/events/${event.id}`}
-          className="inline-flex flex-1 items-center justify-center rounded-xl border border-zinc-600 bg-zinc-950/40 px-4 py-2.5 text-sm font-semibold text-zinc-100 outline-none transition hover:border-zinc-500 hover:bg-zinc-800 hover:text-white focus-visible:ring-2 focus-visible:ring-emerald-500/50"
+          className="inline-flex w-full items-center justify-center rounded-xl border border-zinc-600 bg-zinc-950/40 px-4 py-2.5 text-sm font-semibold text-zinc-100 outline-none transition hover:border-zinc-500 hover:bg-zinc-800 hover:text-white focus-visible:ring-2 focus-visible:ring-emerald-500/50"
         >
           View Details
         </Link>
-        <button
-          type="button"
-          className="inline-flex flex-1 items-center justify-center rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-zinc-950 shadow-lg shadow-emerald-500/20 outline-none transition hover:bg-emerald-400 hover:shadow-emerald-500/35 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900"
-        >
-          Approve
-        </button>
       </div>
     </article>
   );

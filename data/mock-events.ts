@@ -19,6 +19,8 @@ export type HackathonEvent = {
   theme: string;
   rules: string[];
   registrationStatus: RegistrationStatus;
+  approved: boolean;
+  addedToCalendar: boolean;
 };
 
 export const mockHackathonEvents: HackathonEvent[] = [
@@ -41,6 +43,8 @@ export const mockHackathonEvents: HackathonEvent[] = [
       "Respect the code of conduct—be kind, inclusive, and ask before recording.",
     ],
     registrationStatus: "Open",
+    approved: true,
+    addedToCalendar: true,
   },
   {
     id: "2",
@@ -61,6 +65,8 @@ export const mockHackathonEvents: HackathonEvent[] = [
       "Judging rewards polish, clarity, and responsible use of data.",
     ],
     registrationStatus: "Early bird",
+    approved: true,
+    addedToCalendar: true,
   },
   {
     id: "3",
@@ -81,6 +87,8 @@ export const mockHackathonEvents: HackathonEvent[] = [
       "Present problem, user, and ethical considerations in your final pitch.",
     ],
     registrationStatus: "Waitlist",
+    approved: false,
+    addedToCalendar: false,
   },
   {
     id: "4",
@@ -101,6 +109,8 @@ export const mockHackathonEvents: HackathonEvent[] = [
       "Remote participants must join the opening ceremony and final demo block.",
     ],
     registrationStatus: "Closing soon",
+    approved: true,
+    addedToCalendar: true,
   },
   {
     id: "5",
@@ -121,6 +131,8 @@ export const mockHackathonEvents: HackathonEvent[] = [
       "Keep content PG-13 and list any flashing effects in your itch page notes.",
     ],
     registrationStatus: "Open",
+    approved: true,
+    addedToCalendar: false,
   },
   {
     id: "6",
@@ -141,6 +153,8 @@ export const mockHackathonEvents: HackathonEvent[] = [
       "Demos should include a fallback video if live hardware glitches.",
     ],
     registrationStatus: "Closed",
+    approved: false,
+    addedToCalendar: false,
   },
 ];
 

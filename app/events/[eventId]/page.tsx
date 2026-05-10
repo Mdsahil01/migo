@@ -91,7 +91,7 @@ export default async function EventDetailsPage({ params }: EventDetailsPageProps
               </ol>
             </nav>
 
-            <EventApprovalHero event={event} />
+            <EventApprovalHero eventId={event.id} fallbackEvent={event} />
           </div>
         </section>
 

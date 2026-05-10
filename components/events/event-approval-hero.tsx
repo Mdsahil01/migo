@@ -1,13 +1,14 @@
 "use client";
 
 import type { HackathonEvent } from "@/data/mock-events";
-import { useState } from "react";
 
 import { EventDetailActions } from "@/components/events/event-detail-actions";
 import { EventStatusBadge } from "@/components/events/event-status-badge";
+import { useEventContext } from "@/context/event-context";
 
 type EventApprovalHeroProps = {
-  event: HackathonEvent;
+  eventId: string;
+  fallbackEvent: HackathonEvent;
 };
 
 const pendingReviewBadge = {
@@ -22,8 +23,10 @@ const approvedBadge = {
     "border-emerald-500/35 bg-emerald-500/10 text-emerald-300 ring-emerald-500/20",
 };
 
-export function EventApprovalHero({ event }: EventApprovalHeroProps) {
-  const [approved, setApproved] = useState(false);
+export function EventApprovalHero({ eventId, fallbackEvent }: EventApprovalHeroProps) {
+  const { getEventById, approveEvent, markAddedToCalendar } = useEventContext();
+  const event = getEventById(eventId) ?? fallbackEvent;
+  const approved = event.approved;
 
   return (
     <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -58,7 +61,9 @@ export function EventApprovalHero({ event }: EventApprovalHeroProps) {
           <EventDetailActions
             event={event}
             approved={approved}
-            onApprove={() => setApproved(true)}
+            onApprove={() => approveEvent(event.id)}
+            initialAddedToCalendar={event.addedToCalendar}
+            onCalendarAdded={() => markAddedToCalendar(event.id)}
           />
         </div>
       </div>
