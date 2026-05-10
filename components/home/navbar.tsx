@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 const navLinks = [
+  { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/team", label: "Team" },
@@ -25,6 +26,7 @@ export function Navbar() {
           >
             M
           </span>
+
           <span className="text-lg font-semibold tracking-tight text-zinc-100 transition group-hover:text-white">
             MIGO
           </span>
@@ -46,13 +48,6 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/events"
-            className="hidden rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-zinc-950 shadow-lg shadow-emerald-500/25 outline-none transition hover:bg-emerald-400 hover:shadow-emerald-500/40 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 sm:inline-flex"
-          >
-            Explore Events
-          </Link>
-
           <button
             type="button"
             className="inline-flex rounded-lg border border-zinc-700 bg-zinc-900/50 p-2 text-zinc-300 outline-none transition hover:border-zinc-600 hover:bg-zinc-800 hover:text-white focus-visible:ring-2 focus-visible:ring-emerald-500/50 md:hidden"
@@ -60,7 +55,10 @@ export function Navbar() {
             aria-controls="mobile-nav"
             onClick={() => setOpen((v) => !v)}
           >
-            <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
+            <span className="sr-only">
+              {open ? "Close menu" : "Open menu"}
+            </span>
+
             <svg
               className="h-6 w-6"
               fill="none"
@@ -90,7 +88,9 @@ export function Navbar() {
 
       <div
         id="mobile-nav"
-        className={`border-t border-zinc-800/80 bg-zinc-950 md:hidden ${open ? "block" : "hidden"}`}
+        className={`border-t border-zinc-800/80 bg-zinc-950 md:hidden ${
+          open ? "block" : "hidden"
+        }`}
       >
         <nav
           className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6"
@@ -106,13 +106,6 @@ export function Navbar() {
               {label}
             </Link>
           ))}
-          <Link
-            href="/events"
-            className="mt-2 rounded-full bg-emerald-500 px-4 py-3 text-center text-sm font-semibold text-zinc-950 shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400"
-            onClick={() => setOpen(false)}
-          >
-            Explore Events
-          </Link>
         </nav>
       </div>
     </header>
