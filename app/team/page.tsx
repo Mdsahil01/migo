@@ -7,66 +7,55 @@ import {
   TeamMembersWorkspace,
   type TeamMember,
 } from "@/components/team/team-members-workspace";
+
 import { mockHackathonEvents } from "@/data/mock-events";
 
 export const metadata: Metadata = {
   title: "Team — MIGO",
   description:
-    "Meet the MIGO core team, track current mission focus, and review delivery stats.",
+    "Meet the core team operating MIGO and coordinating active missions.",
 };
 
 const teamMembers: TeamMember[] = [
   {
-    name: "Aarav Sharma",
-    role: "Product Lead",
-    responsibility: "Pitch Deck",
-    skills: ["Roadmapping", "Hackathon Ops", "User Research"],
-    githubUsername: "aaravbuilds",
+    name: "Mohammed Sahil",
+    role: "Founder & Product Systems",
+    responsibility: "Vision & Operations",
+    skills: ["Product Thinking", "AI Systems", "Hackathon Operations"],
+    githubUsername: "sahilmigo",
     participationCount: 12,
   },
+
   {
-    name: "Meera Nair",
+    name: "Ayesha R",
     role: "Frontend Engineer",
-    responsibility: "Frontend Development",
-    skills: ["React", "Tailwind CSS", "Design Systems"],
-    githubUsername: "meeracodes",
-    participationCount: 9,
-  },
-  {
-    name: "Rohan Iqbal",
-    role: "Backend Engineer",
-    responsibility: "Backend APIs",
-    skills: ["Node.js", "APIs", "PostgreSQL"],
-    githubUsername: "rohanapi",
-    participationCount: 10,
-  },
-  {
-    name: "Nisha Patel",
-    role: "Developer Advocate",
-    responsibility: "Event Research",
-    skills: ["Community", "Mentorship", "Event Hosting"],
-    githubUsername: "nishadevrel",
+    responsibility: "Frontend Experience",
+    skills: ["React", "UI Systems", "Tailwind CSS"],
+    githubUsername: "ayeshar",
     participationCount: 8,
   },
+
   {
-    name: "Kabir Joshi",
-    role: "Full-Stack Engineer",
-    responsibility: "Deployment",
-    skills: ["TypeScript", "Testing", "Performance"],
-    githubUsername: "kabirstack",
-    participationCount: 11,
+    name: "Aditya G",
+    role: "Backend Engineer",
+    responsibility: "Infrastructure & APIs",
+    skills: ["Node.js", "Backend Systems", "APIs"],
+    githubUsername: "adityag",
+    participationCount: 9,
   },
+
   {
-    name: "Sana Rahman",
-    role: "Design Engineer",
-    responsibility: "UI/UX",
-    skills: ["UX", "Prototyping", "Accessibility"],
-    githubUsername: "sanaui",
+    name: "Hamsini V",
+    role: "Design & Research",
+    responsibility: "Design Direction",
+    skills: ["UI/UX", "Research", "Creative Systems"],
+    githubUsername: "hamsiniv",
     participationCount: 7,
   },
 ];
 
 const approvedEventIds = new Set(["1", "2", "4", "5"]);
+
 const now = new Date();
 
 const approvedEvents = mockHackathonEvents.filter((event) =>
@@ -84,89 +73,104 @@ const currentMission = upcomingApprovedEvents[0];
 
 export default function TeamPage() {
   return (
-    <div className="min-h-full bg-zinc-950 text-zinc-100">
+    <div className="min-h-full bg-black text-zinc-100">
       <Navbar />
 
       <main>
+        {/* Hero */}
         <section
-          className="relative overflow-hidden border-b border-zinc-800/80 px-4 py-12 sm:px-6 sm:py-16"
+          className="relative overflow-hidden border-b border-zinc-900 px-4 py-16 sm:px-6 lg:px-8"
           aria-labelledby="team-heading"
         >
+          {/* Ambient Background */}
           <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_-20%,rgba(16,185,129,0.14),transparent)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_-20%,rgba(34,211,238,0.08),transparent)]"
             aria-hidden
           />
+
           <div className="relative mx-auto max-w-6xl">
-            <p className="text-sm font-semibold uppercase tracking-wider text-emerald-400/90">
-              Team overview
+            <p className="text-xs font-medium uppercase tracking-[0.35em] text-cyan-300/80">
+              MIGO OPERATORS
             </p>
+
             <h1
               id="team-heading"
-              className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl"
+              className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl"
             >
-              The builders behind MIGO
+              The team operating MIGO.
             </h1>
-            <p className="mt-4 max-w-2xl text-base text-zinc-400 sm:text-lg">
-              A lean student team shipping event operations, collaboration tools,
-              and mission support for every hackathon cycle.
+
+            <p className="mt-6 max-w-2xl text-base leading-relaxed tracking-[-0.02em] text-zinc-500 sm:text-lg">
+              A focused group of ambitious students building systems,
+              coordinating missions, and pushing beyond average through
+              execution.
             </p>
           </div>
         </section>
 
-        <section className="px-4 pb-8 sm:px-6 sm:pb-10" aria-labelledby="current-mission">
+        {/* Current Mission */}
+        <section className="px-4 py-10 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
-            <article className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/55 shadow-xl shadow-black/30">
-              <div className="bg-gradient-to-r from-emerald-500/15 via-cyan-500/10 to-transparent px-6 py-6 sm:px-8">
-                <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">
-                  Current mission
+            <article className="overflow-hidden rounded-3xl border border-zinc-900 bg-zinc-950/80 backdrop-blur-xl">
+              <div className="bg-gradient-to-r from-cyan-400/10 via-cyan-300/5 to-transparent px-6 py-6 sm:px-8">
+                <p className="text-xs uppercase tracking-[0.3em] text-cyan-300/80">
+                  CURRENT MISSION
                 </p>
-                <h2
-                  id="current-mission"
-                  className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl"
-                >
-                  {currentMission?.title ?? "No approved mission scheduled"}
+
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white">
+                  {currentMission?.title ?? "No active mission"}
                 </h2>
               </div>
+
               <div className="px-6 py-6 sm:px-8">
                 {currentMission ? (
                   <>
-                    <p className="text-zinc-300">{currentMission.description}</p>
-                    <dl className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                      <div className="rounded-xl border border-zinc-800 bg-zinc-950/40 px-4 py-3">
-                        <dt className="text-xs uppercase tracking-wider text-zinc-500">
-                          Date
-                        </dt>
-                        <dd className="mt-1 text-sm font-semibold text-zinc-100">
+                    <p className="max-w-3xl leading-relaxed text-zinc-400">
+                      {currentMission.description}
+                    </p>
+
+                    <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                      <div className="rounded-2xl border border-zinc-900 bg-black/40 p-4">
+                        <p className="text-xs uppercase tracking-[0.2em] text-zinc-600">
+                          DATE
+                        </p>
+
+                        <p className="mt-2 text-lg font-medium text-zinc-100">
                           {currentMission.date}
-                        </dd>
+                        </p>
                       </div>
-                      <div className="rounded-xl border border-zinc-800 bg-zinc-950/40 px-4 py-3">
-                        <dt className="text-xs uppercase tracking-wider text-zinc-500">
-                          Theme
-                        </dt>
-                        <dd className="mt-1 text-sm font-semibold text-zinc-100">
-                          {currentMission.theme}
-                        </dd>
+
+                      <div className="rounded-2xl border border-zinc-900 bg-black/40 p-4">
+                        <p className="text-xs uppercase tracking-[0.2em] text-zinc-600">
+                          LOCATION
+                        </p>
+
+                        <p className="mt-2 text-lg font-medium text-zinc-100">
+                          {currentMission.location}
+                        </p>
                       </div>
-                      <div className="rounded-xl border border-zinc-800 bg-zinc-950/40 px-4 py-3">
-                        <dt className="text-xs uppercase tracking-wider text-zinc-500">
-                          Team size
-                        </dt>
-                        <dd className="mt-1 text-sm font-semibold text-zinc-100">
-                          {currentMission.teamSize}
-                        </dd>
+
+                      <div className="rounded-2xl border border-zinc-900 bg-black/40 p-4">
+                        <p className="text-xs uppercase tracking-[0.2em] text-zinc-600">
+                          TEAM STATUS
+                        </p>
+
+                        <p className="mt-2 text-lg font-medium text-cyan-200">
+                          4 Builders Active
+                        </p>
                       </div>
-                    </dl>
+                    </div>
+
                     <Link
                       href={`/events/${currentMission.id}`}
-                      className="mt-6 inline-flex rounded-lg border border-zinc-700 bg-zinc-950/40 px-4 py-2.5 text-sm font-semibold text-zinc-100 outline-none transition hover:border-zinc-500 hover:bg-zinc-800 hover:text-white focus-visible:ring-2 focus-visible:ring-emerald-500/50"
+                      className="mt-8 inline-flex rounded-full border border-cyan-400/10 bg-cyan-400/5 px-5 py-3 text-sm font-medium text-cyan-100 transition hover:border-cyan-300/20 hover:bg-cyan-400/10"
                     >
-                      Open mission details
+                      Open Mission
                     </Link>
                   </>
                 ) : (
-                  <p className="text-zinc-400">
-                    Approve an upcoming event to highlight the next mission here.
+                  <p className="text-zinc-500">
+                    No approved mission available right now.
                   </p>
                 )}
               </div>
@@ -174,12 +178,12 @@ export default function TeamPage() {
           </div>
         </section>
 
+        {/* Team Workspace */}
         <TeamMembersWorkspace
           initialMembers={teamMembers}
           approvedMissionsCount={approvedEvents.length}
           upcomingMissionsCount={upcomingApprovedEvents.length}
         />
-
       </main>
 
       <SiteFooter />
