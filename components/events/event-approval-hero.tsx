@@ -61,7 +61,23 @@ export function EventApprovalHero({ eventId, fallbackEvent }: EventApprovalHeroP
           <EventDetailActions
             event={event}
             approved={approved}
-            onApprove={() => approveEvent(event.id)}
+            onApprove={async () => {
+              approveEvent(event.id);
+            
+              await fetch("/api/discord", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  title: event.title,
+                  date: event.date,
+                  location: event.location,
+                  relevance: 4,
+                  link: "https://migo-teams.vercel.app/events",
+                }),
+              });
+            }}
             initialAddedToCalendar={event.addedToCalendar}
             onCalendarAdded={() => markAddedToCalendar(event.id)}
           />
