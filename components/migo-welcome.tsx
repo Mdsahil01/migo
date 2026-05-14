@@ -37,7 +37,7 @@ export function MigoWelcome({
 
   return (
     <div className="pointer-events-none fixed inset-0 z-[100] flex items-start justify-center pt-24">
-      <div className="animate-[migoFade_3.0s_ease-in-out_forwards] rounded-2xl border border-cyan-500/30 bg-black/75 px-8 py-5 shadow-2xl shadow-cyan-500/20 backdrop-blur-2xl">
+      <div className="animate-[migoFade_4.0s_ease-in-out_forwards] rounded-2xl border border-cyan-500/30 bg-black/75 px-8 py-5 shadow-2xl shadow-cyan-500/20 backdrop-blur-2xl">
         <p className="text-center text-xs font-semibold uppercase tracking-[0.35em] text-cyan-400">
           MIGO VERIFIED
         </p>
