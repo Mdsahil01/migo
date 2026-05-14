@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { Navbar } from "@/components/home/navbar";
 import { SiteFooter } from "@/components/home/site-footer";
+
 import {
   TeamMembersWorkspace,
   type TeamMember,
@@ -10,68 +11,78 @@ import {
 
 import { mockHackathonEvents } from "@/data/mock-events";
 
+import { supabase } from "@/lib/supabase";
+
 export const metadata: Metadata = {
   title: "Team — MIGO",
   description:
     "Meet the core team operating MIGO and coordinating active missions.",
 };
 
-const teamMembers: TeamMember[] = [
-  {
-    name: "Mohammed Sahil",
-    role: "Founder & Product Systems",
-    responsibility: "Vision & Operations",
-    skills: ["Product Thinking", "AI Systems", "Hackathon Operations"],
-    githubUsername: "sahilmigo",
-    participationCount: 12,
-  },
-
-  {
-    name: "Ayesha R",
-    role: "Frontend Engineer",
-    responsibility: "Frontend Experience",
-    skills: ["React", "UI Systems", "Tailwind CSS"],
-    githubUsername: "ayeshar",
-    participationCount: 8,
-  },
-
-  {
-    name: "Aditya G",
-    role: "Backend Engineer",
-    responsibility: "Infrastructure & APIs",
-    skills: ["Node.js", "Backend Systems", "APIs"],
-    githubUsername: "adityag",
-    participationCount: 9,
-  },
-
-  {
-    name: "Hamsini V",
-    role: "Design & Research",
-    responsibility: "Design Direction",
-    skills: ["UI/UX", "Research", "Creative Systems"],
-    githubUsername: "hamsiniv",
-    participationCount: 7,
-  },
-];
-
-const approvedEventIds = new Set(["1", "2", "4", "5"]);
+const approvedEventIds = new Set([
+  "1",
+  "2",
+  "4",
+  "5",
+]);
 
 const now = new Date();
 
-const approvedEvents = mockHackathonEvents.filter((event) =>
-  approvedEventIds.has(event.id),
-);
-
-const upcomingApprovedEvents = approvedEvents
-  .filter((event) => new Date(event.startsAtIso).getTime() > now.getTime())
-  .sort(
-    (a, b) =>
-      new Date(a.startsAtIso).getTime() - new Date(b.startsAtIso).getTime(),
+const approvedEvents =
+  mockHackathonEvents.filter((event) =>
+    approvedEventIds.has(event.id),
   );
 
-const currentMission = upcomingApprovedEvents[0];
+const upcomingApprovedEvents =
+  approvedEvents
+    .filter(
+      (event) =>
+        new Date(
+          event.startsAtIso,
+        ).getTime() > now.getTime(),
+    )
+    .sort(
+      (a, b) =>
+        new Date(
+          a.startsAtIso,
+        ).getTime() -
+        new Date(
+          b.startsAtIso,
+        ).getTime(),
+    );
 
-export default function TeamPage() {
+const currentMission =
+  upcomingApprovedEvents[0];
+
+export default async function TeamPage() {
+  const { data: membersData } =
+    await supabase
+      .from("members")
+      .select("*");
+
+  const teamMembers: TeamMember[] =
+    (membersData || []).map(
+      (member) => ({
+        name:
+          member.name ||
+          "MIGO Member",
+
+        role:
+          member.role || "Member",
+
+        responsibility:
+          "Mission Operations",
+
+        skills: ["MIGO Team"],
+
+        githubUsername:
+          member.github_username ||
+          "migo-member",
+
+        participationCount: 0,
+      }),
+    );
+
   return (
     <div className="min-h-full bg-black text-zinc-100">
       <Navbar />
@@ -82,7 +93,6 @@ export default function TeamPage() {
           className="relative overflow-hidden border-b border-zinc-900 px-4 py-16 sm:px-6 lg:px-8"
           aria-labelledby="team-heading"
         >
-          {/* Ambient Background */}
           <div
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_-20%,rgba(34,211,238,0.08),transparent)]"
             aria-hidden
@@ -101,9 +111,11 @@ export default function TeamPage() {
             </h1>
 
             <p className="mt-6 max-w-2xl text-base leading-relaxed tracking-[-0.02em] text-zinc-500 sm:text-lg">
-              A focused group of ambitious students building systems,
-              coordinating missions, and pushing beyond average through
-              execution.
+              A focused group of ambitious
+              students building systems,
+              coordinating missions, and
+              pushing beyond average
+              through execution.
             </p>
           </div>
         </section>
@@ -118,7 +130,8 @@ export default function TeamPage() {
                 </p>
 
                 <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white">
-                  {currentMission?.title ?? "No active mission"}
+                  {currentMission?.title ??
+                    "No active mission"}
                 </h2>
               </div>
 
@@ -126,7 +139,9 @@ export default function TeamPage() {
                 {currentMission ? (
                   <>
                     <p className="max-w-3xl leading-relaxed text-zinc-400">
-                      {currentMission.description}
+                      {
+                        currentMission.description
+                      }
                     </p>
 
                     <div className="mt-8 grid gap-4 sm:grid-cols-3">
@@ -136,7 +151,9 @@ export default function TeamPage() {
                         </p>
 
                         <p className="mt-2 text-lg font-medium text-zinc-100">
-                          {currentMission.date}
+                          {
+                            currentMission.date
+                          }
                         </p>
                       </div>
 
@@ -146,7 +163,9 @@ export default function TeamPage() {
                         </p>
 
                         <p className="mt-2 text-lg font-medium text-zinc-100">
-                          {currentMission.location}
+                          {
+                            currentMission.location
+                          }
                         </p>
                       </div>
 
@@ -156,7 +175,10 @@ export default function TeamPage() {
                         </p>
 
                         <p className="mt-2 text-lg font-medium text-cyan-200">
-                          4 Builders Active
+                          {
+                            teamMembers.length
+                          }{" "}
+                          Builders Active
                         </p>
                       </div>
                     </div>
@@ -170,7 +192,8 @@ export default function TeamPage() {
                   </>
                 ) : (
                   <p className="text-zinc-500">
-                    No approved mission available right now.
+                    No approved mission
+                    available right now.
                   </p>
                 )}
               </div>
@@ -181,8 +204,12 @@ export default function TeamPage() {
         {/* Team Workspace */}
         <TeamMembersWorkspace
           initialMembers={teamMembers}
-          approvedMissionsCount={approvedEvents.length}
-          upcomingMissionsCount={upcomingApprovedEvents.length}
+          approvedMissionsCount={
+            approvedEvents.length
+          }
+          upcomingMissionsCount={
+            upcomingApprovedEvents.length
+          }
         />
       </main>
 
