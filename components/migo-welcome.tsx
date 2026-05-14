@@ -1,6 +1,7 @@
  "use client";
 
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 
 type MigoWelcomeProps = {
   name: string;
@@ -9,10 +10,12 @@ type MigoWelcomeProps = {
 export function MigoWelcome({
   name,
 }: MigoWelcomeProps) {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] =
+    useState(false);
 
   useEffect(() => {
-    const storageKey = `migo-welcome-${name}`;
+    const storageKey =
+      `migo-welcome-${name}`;
 
     const alreadyShown =
       sessionStorage.getItem(storageKey);
@@ -24,12 +27,6 @@ export function MigoWelcome({
       );
 
       setVisible(true);
-
-      const timer = setTimeout(() => {
-        setVisible(false);
-      }, 1800);
-
-      return () => clearTimeout(timer);
     }
   }, [name]);
 
@@ -37,7 +34,15 @@ export function MigoWelcome({
 
   return (
     <div className="pointer-events-none fixed inset-0 z-[100] flex items-start justify-center pt-24">
-      <div className="animate-[migoFade_10.0s_ease-in-out_forwards] rounded-2xl border border-cyan-500/30 bg-black/75 px-8 py-5 shadow-2xl shadow-cyan-500/20 backdrop-blur-2xl">
+      <div className="pointer-events-auto relative animate-[migoFade_0.6s_ease-out] rounded-2xl border border-cyan-500/30 bg-black/75 px-8 py-5 shadow-2xl shadow-cyan-500/20 backdrop-blur-2xl">
+        
+        <button
+          onClick={() => setVisible(false)}
+          className="absolute right-3 top-3 text-zinc-500 transition hover:text-white"
+        >
+          <X size={18} />
+        </button>
+
         <p className="text-center text-xs font-semibold uppercase tracking-[0.35em] text-cyan-400">
           MIGO VERIFIED
         </p>
@@ -55,22 +60,14 @@ export function MigoWelcome({
         @keyframes migoFade {
           0% {
             opacity: 0;
-            transform: translateY(-16px) scale(0.96);
-          }
-
-          20% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-
-          85% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateY(-14px)
+              scale(0.98);
           }
 
           100% {
-            opacity: 0;
-            transform: translateY(-10px) scale(0.98);
+            opacity: 1;
+            transform: translateY(0)
+              scale(1);
           }
         }
       `}</style>
