@@ -67,6 +67,10 @@ export default async function TeamPage() {
           member.name ||
           "MIGO Member",
 
+        email:
+          member.email ||
+          "unknown@migo.dev",
+
         role:
           member.role || "Member",
 

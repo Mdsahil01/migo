@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 export type TeamMember = {
   name: string;
+  email: string;
   role: string;
   responsibility: string;
   skills: string[];
@@ -65,6 +66,17 @@ export function TeamMembersWorkspace({
   const [form, setForm] = useState(
     initialInviteForm,
   );
+
+  const [editingMember, setEditingMember] =
+    useState<TeamMember | null>(null);
+
+  const [editForm, setEditForm] =
+    useState({
+      name: "",
+      role: "",
+      githubUsername: "",
+      email: "",
+    });
 
   const totalParticipations = useMemo(
     () =>
@@ -163,11 +175,12 @@ export function TeamMembersWorkspace({
 
       const newMember: TeamMember = {
         name,
+        email,
         role,
         responsibility:
-          "Event Research",
+          "Mission Operations",
         githubUsername,
-        skills: ["New member"],
+        skills: ["MIGO Team"],
         participationCount: 0,
       };
 
@@ -183,6 +196,116 @@ export function TeamMembersWorkspace({
       alert(
         "Member invited successfully.",
       );
+    } catch (error) {
+      alert("Something went wrong.");
+    }
+  };
+
+  const onDeleteMember = async (
+    email: string,
+  ) => {
+    const confirmed = window.confirm(
+      "Remove this member from MIGO?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "/api/delete-member",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        },
+      );
+
+      const result =
+        await response.json();
+
+      if (!response.ok) {
+        alert(
+          result.error ||
+            "Failed to remove member",
+        );
+
+        return;
+      }
+
+      setMembers((prevMembers) =>
+        prevMembers.filter(
+          (member) =>
+            member.email !== email,
+        ),
+      );
+
+      alert("Member removed.");
+    } catch (error) {
+      alert("Something went wrong.");
+    }
+  };
+
+  const onEditMember = async () => {
+    if (!editingMember) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "/api/edit-member",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            email: editForm.email,
+            name: editForm.name,
+            role: editForm.role,
+            githubUsername:
+              editForm.githubUsername,
+          }),
+        },
+      );
+
+      const result =
+        await response.json();
+
+      if (!response.ok) {
+        alert(
+          result.error ||
+            "Failed to edit member",
+        );
+
+        return;
+      }
+
+      setMembers((prevMembers) =>
+        prevMembers.map((member) =>
+          member.email ===
+          editForm.email
+            ? {
+                ...member,
+                name: editForm.name,
+                role: editForm.role,
+                githubUsername:
+                  editForm.githubUsername,
+              }
+            : member,
+        ),
+      );
+
+      setEditingMember(null);
+
+      alert("Member updated.");
     } catch (error) {
       alert("Something went wrong.");
     }
@@ -306,11 +429,130 @@ export function TeamMembersWorkspace({
                     ),
                   )}
                 </div>
+
+                <div className="mt-5 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingMember(
+                        member,
+                      );
+
+                      setEditForm({
+                        name:
+                          member.name,
+                        role:
+                          member.role,
+                        githubUsername:
+                          member.githubUsername,
+                        email:
+                          member.email,
+                      });
+                    }}
+                    className="inline-flex rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-2 text-xs font-semibold text-cyan-200 transition hover:bg-cyan-500/20"
+                  >
+                    Edit Member
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onDeleteMember(
+                        member.email,
+                      )
+                    }
+                    className="inline-flex rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 transition hover:bg-red-500/20"
+                  >
+                    Remove Member
+                  </button>
+                </div>
               </article>
             ))}
           </div>
         </div>
       </section>
+
+      {editingMember ? (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/70"
+            onClick={() =>
+              setEditingMember(null)
+            }
+          />
+
+          <div className="relative z-10 w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl">
+            <h3 className="text-xl font-semibold text-white">
+              Edit Member
+            </h3>
+
+            <div className="mt-5 space-y-4">
+              <input
+                type="text"
+                value={editForm.name}
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    name: e.target.value,
+                  })
+                }
+                placeholder="Name"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm text-white"
+              />
+
+              <input
+                type="text"
+                value={editForm.role}
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    role: e.target.value,
+                  })
+                }
+                placeholder="Role"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm text-white"
+              />
+
+              <input
+                type="text"
+                value={
+                  editForm.githubUsername
+                }
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    githubUsername:
+                      e.target.value,
+                  })
+                }
+                placeholder="GitHub Username"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm text-white"
+              />
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setEditingMember(null)
+                  }
+                  className="rounded-xl border border-zinc-700 px-4 py-2 text-sm text-zinc-300"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  onClick={onEditMember}
+                  className="rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-black"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {isInviteOpen ? (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
