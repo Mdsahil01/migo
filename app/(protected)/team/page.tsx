@@ -14,8 +14,6 @@ import {
   type TeamMember,
 } from "@/components/team/team-members-workspace";
 
-import { mockHackathonEvents } from "@/data/mock-events";
-
 import { supabase } from "@/lib/supabase";
 
 export const metadata: Metadata = {
@@ -23,41 +21,6 @@ export const metadata: Metadata = {
   description:
     "Meet the core team operating MIGO and coordinating active missions.",
 };
-
-const approvedEventIds = new Set([
-  "1",
-  "2",
-  "4",
-  "5",
-]);
-
-const now = new Date();
-
-const approvedEvents =
-  mockHackathonEvents.filter((event) =>
-    approvedEventIds.has(event.id),
-  );
-
-const upcomingApprovedEvents =
-  approvedEvents
-    .filter(
-      (event) =>
-        new Date(
-          event.startsAtIso,
-        ).getTime() > now.getTime(),
-    )
-    .sort(
-      (a, b) =>
-        new Date(
-          a.startsAtIso,
-        ).getTime() -
-        new Date(
-          b.startsAtIso,
-        ).getTime(),
-    );
-
-const currentMission =
-  upcomingApprovedEvents[0];
 
 export default async function TeamPage() {
   const { userId } = await auth();
@@ -67,11 +30,11 @@ export default async function TeamPage() {
   if (userId) {
     const client = await clerkClient();
 
-const user =
-  await client.users.getUser(
-    userId,
-  );
-      
+    const user =
+      await client.users.getUser(
+        userId,
+      );
+
     currentUserEmail =
       user.emailAddresses[0]
         ?.emailAddress
@@ -82,6 +45,29 @@ const user =
     await supabase
       .from("members")
       .select("*");
+
+  const { data: eventsData } =
+    await supabase
+      .from("events")
+      .select("*")
+      .eq("status", "approved")
+      .order("starts_at", {
+        ascending: true,
+      });
+
+  const approvedEvents =
+    eventsData || [];
+
+  const currentMission =
+    approvedEvents[0];
+
+  const upcomingApprovedEvents =
+    approvedEvents.filter(
+      (event) =>
+        new Date(
+          event.starts_at,
+        ).getTime() > Date.now(),
+    );
 
   const currentMember =
     membersData?.find(
@@ -190,9 +176,9 @@ const user =
                         </p>
 
                         <p className="mt-2 text-lg font-medium text-zinc-100">
-                          {
-                            currentMission.date
-                          }
+                          {new Date(
+                            currentMission.starts_at,
+                          ).toLocaleDateString()}
                         </p>
                       </div>
 

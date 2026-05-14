@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 
+import { CreateEventModal } from "@/components/team/create-event-modal";
+
 export type TeamMember = {
   name: string;
   email: string;
@@ -64,6 +66,11 @@ export function TeamMembersWorkspace({
 
   const [isInviteOpen, setIsInviteOpen] =
     useState(false);
+
+  const [
+    isCreateEventOpen,
+    setIsCreateEventOpen,
+  ] = useState(false);
 
   const [form, setForm] = useState(
     initialInviteForm,
@@ -346,15 +353,27 @@ export function TeamMembersWorkspace({
             </div>
 
             {isTeamLead && (
-              <button
-                type="button"
-                onClick={() =>
-                  setIsInviteOpen(true)
-                }
-                className="inline-flex rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-zinc-950 shadow-lg shadow-emerald-500/25 outline-none transition hover:bg-emerald-400 hover:shadow-emerald-500/40"
-              >
-                + Invite Member
-              </button>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setIsCreateEventOpen(true)
+                  }
+                  className="inline-flex rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-4 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-500/20"
+                >
+                  + Create Mission
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setIsInviteOpen(true)
+                  }
+                  className="inline-flex rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-zinc-950 shadow-lg shadow-emerald-500/25 outline-none transition hover:bg-emerald-400 hover:shadow-emerald-500/40"
+                >
+                  + Invite Member
+                </button>
+              </div>
             )}
           </div>
 
@@ -654,6 +673,13 @@ export function TeamMembersWorkspace({
           </div>
         </div>
       ) : null}
+
+      <CreateEventModal
+        open={isCreateEventOpen}
+        onClose={() =>
+          setIsCreateEventOpen(false)
+        }
+      />
     </>
   );
 }
