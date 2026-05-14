@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useMemo, useState } from "react";
 
@@ -315,10 +315,7 @@ export function TeamMembersWorkspace({
 
   return (
     <>
-      <section
-        className="px-4 py-10 sm:px-6 sm:py-14"
-        aria-label="Team statistics"
-      >
+      <section className="px-4 py-10 sm:px-6 sm:py-14">
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {teamStats.map((stat) => (
@@ -332,17 +329,11 @@ export function TeamMembersWorkspace({
         </div>
       </section>
 
-      <section
-        className="px-4 pb-12 sm:px-6 sm:pb-16"
-        aria-labelledby="team-members"
-      >
+      <section className="px-4 pb-12 sm:px-6 sm:pb-16">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <h2
-                id="team-members"
-                className="text-xl font-semibold tracking-tight text-white sm:text-2xl"
-              >
+              <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
                 Team members
               </h2>
 
@@ -354,15 +345,17 @@ export function TeamMembersWorkspace({
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={() =>
-                setIsInviteOpen(true)
-              }
-              className="inline-flex rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-zinc-950 shadow-lg shadow-emerald-500/25 outline-none transition hover:bg-emerald-400 hover:shadow-emerald-500/40 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
-            >
-              + Invite Member
-            </button>
+            {isTeamLead && (
+              <button
+                type="button"
+                onClick={() =>
+                  setIsInviteOpen(true)
+                }
+                className="inline-flex rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-zinc-950 shadow-lg shadow-emerald-500/25 outline-none transition hover:bg-emerald-400 hover:shadow-emerald-500/40"
+              >
+                + Invite Member
+              </button>
+            )}
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -432,42 +425,44 @@ export function TeamMembersWorkspace({
                   )}
                 </div>
 
-                <div className="mt-5 flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEditingMember(
-                        member,
-                      );
+                {isTeamLead && (
+                  <div className="mt-5 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingMember(
+                          member,
+                        );
 
-                      setEditForm({
-                        name:
-                          member.name,
-                        role:
-                          member.role,
-                        githubUsername:
-                          member.githubUsername,
-                        email:
+                        setEditForm({
+                          name:
+                            member.name,
+                          role:
+                            member.role,
+                          githubUsername:
+                            member.githubUsername,
+                          email:
+                            member.email,
+                        });
+                      }}
+                      className="inline-flex rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-2 text-xs font-semibold text-cyan-200 transition hover:bg-cyan-500/20"
+                    >
+                      Edit Member
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        onDeleteMember(
                           member.email,
-                      });
-                    }}
-                    className="inline-flex rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-2 text-xs font-semibold text-cyan-200 transition hover:bg-cyan-500/20"
-                  >
-                    Edit Member
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      onDeleteMember(
-                        member.email,
-                      )
-                    }
-                    className="inline-flex rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 transition hover:bg-red-500/20"
-                  >
-                    Remove Member
-                  </button>
-                </div>
+                        )
+                      }
+                      className="inline-flex rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 transition hover:bg-red-500/20"
+                    >
+                      Remove Member
+                    </button>
+                  </div>
+                )}
               </article>
             ))}
           </div>
@@ -561,7 +556,6 @@ export function TeamMembersWorkspace({
           <button
             type="button"
             className="absolute inset-0 bg-zinc-950/75 backdrop-blur-sm"
-            aria-label="Close invite member modal"
             onClick={() =>
               setIsInviteOpen(false)
             }
@@ -572,115 +566,86 @@ export function TeamMembersWorkspace({
               Invite new member
             </h3>
 
-            <p className="mt-1 text-sm text-zinc-400">
-              Add a teammate to your
-              MIGO core team workspace.
-            </p>
-
             <form
               className="mt-5 space-y-4"
               onSubmit={onInviteSubmit}
             >
-              <label className="block">
-                <span className="text-sm font-medium text-zinc-300">
-                  Name
-                </span>
+              <input
+                type="text"
+                value={form.name}
+                onChange={(event) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    name:
+                      event.target.value,
+                  }))
+                }
+                placeholder="Name"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100"
+                required
+              />
 
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(event) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      name:
-                        event.target.value,
-                    }))
-                  }
-                  className="mt-1.5 w-full rounded-xl border border-zinc-700 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-500 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/40"
-                  placeholder="e.g. Priya Singh"
-                  required
-                />
-              </label>
+              <input
+                type="email"
+                value={form.email}
+                onChange={(event) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    email:
+                      event.target.value,
+                  }))
+                }
+                placeholder="Email"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100"
+                required
+              />
 
-              <label className="block">
-                <span className="text-sm font-medium text-zinc-300">
-                  Email
-                </span>
+              <input
+                type="text"
+                value={form.role}
+                onChange={(event) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    role:
+                      event.target.value,
+                  }))
+                }
+                placeholder="Role"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100"
+                required
+              />
 
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={(event) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      email:
-                        event.target.value,
-                    }))
-                  }
-                  className="mt-1.5 w-full rounded-xl border border-zinc-700 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-500 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/40"
-                  placeholder="e.g. teammate@gmail.com"
-                  required
-                />
-              </label>
+              <input
+                type="text"
+                value={
+                  form.githubUsername
+                }
+                onChange={(event) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    githubUsername:
+                      event.target.value,
+                  }))
+                }
+                placeholder="GitHub Username"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100"
+                required
+              />
 
-              <label className="block">
-                <span className="text-sm font-medium text-zinc-300">
-                  Role
-                </span>
-
-                <input
-                  type="text"
-                  value={form.role}
-                  onChange={(event) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      role:
-                        event.target.value,
-                    }))
-                  }
-                  className="mt-1.5 w-full rounded-xl border border-zinc-700 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-500 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/40"
-                  placeholder="e.g. Mobile Engineer"
-                  required
-                />
-              </label>
-
-              <label className="block">
-                <span className="text-sm font-medium text-zinc-300">
-                  GitHub Username
-                </span>
-
-                <input
-                  type="text"
-                  value={
-                    form.githubUsername
-                  }
-                  onChange={(event) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      githubUsername:
-                        event.target.value,
-                    }))
-                  }
-                  className="mt-1.5 w-full rounded-xl border border-zinc-700 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-500 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/40"
-                  placeholder="e.g. priyacodes"
-                  required
-                />
-              </label>
-
-              <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
+              <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() =>
                     setIsInviteOpen(false)
                   }
-                  className="inline-flex justify-center rounded-xl border border-zinc-700 bg-zinc-950/50 px-4 py-2.5 text-sm font-semibold text-zinc-200 outline-none transition hover:border-zinc-600 hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-emerald-500/50"
+                  className="rounded-xl border border-zinc-700 px-4 py-2 text-sm text-zinc-300"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  className="inline-flex justify-center rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-zinc-950 outline-none transition hover:bg-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900"
+                  className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-black"
                 >
                   Add Member
                 </button>
