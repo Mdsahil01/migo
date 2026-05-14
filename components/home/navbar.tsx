@@ -65,14 +65,21 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           {mounted &&
             (isSignedIn ? (
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox:
-                      "h-10 w-10 border border-cyan-500/30 shadow-lg shadow-cyan-500/20",
-                  },
+              <div
+                onClick={() => {
+                  sessionStorage.clear();
                 }}
-              />
+              >
+                <UserButton
+                  userProfileMode="modal"
+                  appearance={{
+                    elements: {
+                      avatarBox:
+                        "h-10 w-10 border border-cyan-500/30 shadow-lg shadow-cyan-500/20",
+                    },
+                  }}
+                />
+              </div>
             ) : (
               <SignInButton mode="modal">
                 <button className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-5 py-2 text-sm font-medium text-cyan-300 transition hover:bg-cyan-500/20">
