@@ -16,6 +16,7 @@ type TeamMembersWorkspaceProps = {
   initialMembers: TeamMember[];
   approvedMissionsCount: number;
   upcomingMissionsCount: number;
+  isTeamLead: boolean;
 };
 
 type InviteFormState = {
@@ -56,6 +57,7 @@ export function TeamMembersWorkspace({
   initialMembers,
   approvedMissionsCount,
   upcomingMissionsCount,
+  isTeamLead,
 }: TeamMembersWorkspaceProps) {
   const [members, setMembers] =
     useState(initialMembers);

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { auth } from "@clerk/nextjs/server";
+
 import { Navbar } from "@/components/home/navbar";
 import { SiteFooter } from "@/components/home/site-footer";
 
@@ -55,10 +57,31 @@ const currentMission =
   upcomingApprovedEvents[0];
 
 export default async function TeamPage() {
+  const { sessionClaims } =
+    await auth();
+
+  const currentUserEmail =
+    (
+      sessionClaims as {
+        email?: string;
+      }
+    )?.email?.toLowerCase() || "";
+
   const { data: membersData } =
     await supabase
       .from("members")
       .select("*");
+
+  const currentMember =
+    membersData?.find(
+      (member) =>
+        member.email?.toLowerCase() ===
+        currentUserEmail,
+    );
+
+  const isTeamLead =
+    currentMember?.role ===
+    "Team Lead";
 
   const teamMembers: TeamMember[] =
     (membersData || []).map(
@@ -214,6 +237,7 @@ export default async function TeamPage() {
           upcomingMissionsCount={
             upcomingApprovedEvents.length
           }
+          isTeamLead={isTeamLead}
         />
       </main>
 
