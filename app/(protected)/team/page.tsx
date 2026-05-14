@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { auth } from "@clerk/nextjs/server";
+import {
+  auth,
+  clerkClient,
+} from "@clerk/nextjs/server";
 
 import { Navbar } from "@/components/home/navbar";
 import { SiteFooter } from "@/components/home/site-footer";
@@ -57,15 +60,23 @@ const currentMission =
   upcomingApprovedEvents[0];
 
 export default async function TeamPage() {
-  const { sessionClaims } =
-    await auth();
+  const { userId } = await auth();
 
-  const currentUserEmail =
-    (
-      sessionClaims as {
-        email?: string;
-      }
-    )?.email?.toLowerCase() || "";
+  let currentUserEmail = "";
+
+  if (userId) {
+    const client = await clerkClient();
+
+const user =
+  await client.users.getUser(
+    userId,
+  );
+      
+    currentUserEmail =
+      user.emailAddresses[0]
+        ?.emailAddress
+        ?.toLowerCase() || "";
+  }
 
   const { data: membersData } =
     await supabase
@@ -80,8 +91,9 @@ export default async function TeamPage() {
     );
 
   const isTeamLead =
-    currentMember?.role ===
-    "Team Lead";
+    currentMember?.role
+      ?.toLowerCase() ===
+    "team lead";
 
   const teamMembers: TeamMember[] =
     (membersData || []).map(
@@ -228,7 +240,6 @@ export default async function TeamPage() {
           </div>
         </section>
 
-        {/* Team Workspace */}
         <TeamMembersWorkspace
           initialMembers={teamMembers}
           approvedMissionsCount={
