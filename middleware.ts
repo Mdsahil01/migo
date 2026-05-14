@@ -6,15 +6,13 @@ import {
 
 import { NextResponse } from "next/server";
 
+import { supabase } from "./lib/supabase";
+
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
   "/events(.*)",
   "/team(.*)",
 ]);
-
-const allowedEmails = [
-  "mohammedsahil3752@gmail.com",
-];
 
 export default clerkMiddleware(async (auth, req) => {
   if (!isProtectedRoute(req)) {
@@ -36,12 +34,19 @@ export default clerkMiddleware(async (auth, req) => {
   const email =
     user.emailAddresses[0]?.emailAddress;
 
-  console.log("CLERK EMAIL:", email);
+  if (!email) {
+    return NextResponse.redirect(
+      new URL("/unauthorized", req.url),
+    );
+  }
 
-  if (
-    !email ||
-    !allowedEmails.includes(email.toLowerCase())
-  ) {
+  const { data: member } = await supabase
+    .from("members")
+    .select("*")
+    .eq("email", email.toLowerCase())
+    .single();
+
+  if (!member) {
     return NextResponse.redirect(
       new URL("/unauthorized", req.url),
     );
