@@ -8,7 +8,8 @@ export async function POST(
   request: Request,
 ) {
   try {
-    const { userId } = await auth();
+    const { userId } =
+      await auth();
 
     if (!userId) {
       return NextResponse.json(
@@ -26,6 +27,7 @@ export async function POST(
       title,
       description,
       location,
+      registration_link,
       starts_at,
       status,
       created_by,
@@ -53,6 +55,7 @@ export async function POST(
             title,
             description,
             location,
+            registration_link,
             starts_at,
             status:
               status || "reviewing",

@@ -27,6 +27,9 @@ export async function POST(
       eventId,
       status,
       title,
+      location,
+      starts_at,
+      registration_link,
     } = body;
 
     if (
@@ -62,20 +65,47 @@ export async function POST(
     if (
       status === "approved"
     ) {
-      await fetch(
+      const webhookUrl =
         process.env
-          .DISCORD_WEBHOOK_URL!,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
+          .DISCORD_WEBHOOK_URL;
+
+      if (webhookUrl) {
+        await fetch(
+          webhookUrl,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            body: JSON.stringify({
+              content: `
+🚀 Mission Approved
+
+🎯 Mission:
+${title}
+
+📍 Location:
+${location}
+
+📅 Date:
+${new Date(
+  starts_at,
+).toLocaleString()}
+
+🔗 Registration:
+${
+  registration_link ||
+  "Not provided"
+}
+
+✅ Status:
+Approved for MIGO operations.
+`,
+            }),
           },
-          body: JSON.stringify({
-            content: `✅ Mission Approved: ${title}`,
-          }),
-        },
-      );
+        );
+      }
     }
 
     return NextResponse.json({

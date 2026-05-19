@@ -3,14 +3,20 @@
 import { useState } from "react";
 
 type EventActionsProps = {
-  eventId: string;
-  title: string;
-};
+    eventId: string;
+    title: string;
+    location: string;
+    starts_at: string;
+    registration_link?: string;
+  };
 
-export function EventActions({
-  eventId,
-  title,
-}: EventActionsProps) {
+  export function EventActions({
+    eventId,
+    title,
+    location,
+    starts_at,
+    registration_link,
+  }: EventActionsProps) {
   const [loading, setLoading] =
     useState(false);
 
@@ -32,6 +38,9 @@ export function EventActions({
             eventId,
             status,
             title,
+            location,
+            starts_at,
+            registration_link,
           }),
         },
       );

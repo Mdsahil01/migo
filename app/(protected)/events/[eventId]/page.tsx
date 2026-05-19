@@ -137,8 +137,12 @@ export default async function EventDetailsPage({
               <EventActions
   eventId={event.id}
   title={event.title}
-/>
-            </div>
+  location={event.location}
+  starts_at={event.starts_at}
+  registration_link={
+    event.registration_link
+  }
+/>         </div>
           </div>
         </section>
 
