@@ -1,6 +1,6 @@
- "use client";
+"use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { EventCard } from "@/components/events/event-card";
 
@@ -15,6 +15,12 @@ type Event = {
   status: string;
 };
 
+type FetchDevfolioResponse = {
+  inserted: number;
+  skippedDuplicates: number;
+  errors?: string[];
+};
+
 export function EventsPageContent() {
   const [events, setEvents] =
     useState<Event[]>([]);
@@ -22,24 +28,68 @@ export function EventsPageContent() {
   const [loading, setLoading] =
     useState(true);
 
+  const [fetching, setFetching] =
+    useState(false);
+
+  const loadEvents = useCallback(
+    async () => {
+      const { data } =
+        await supabase
+          .from("events")
+          .select("*")
+          .order("starts_at", {
+            ascending: true,
+          });
+
+      setEvents(data || []);
+      setLoading(false);
+    },
+    [],
+  );
+
   useEffect(() => {
-    const fetchEvents =
-      async () => {
-        const { data } =
-          await supabase
-            .from("events")
-            .select("*")
-            .order("starts_at", {
-              ascending: true,
-            });
+    void loadEvents();
+  }, [loadEvents]);
 
-        setEvents(data || []);
+  const handleFetchLatestEvents =
+    async () => {
+      try {
+        setFetching(true);
 
-        setLoading(false);
-      };
+        const response = await fetch(
+          "/api/fetch-devfolio-events",
+          { method: "POST" },
+        );
 
-    fetchEvents();
-  }, []);
+        const result =
+          (await response.json()) as FetchDevfolioResponse & {
+            error?: string;
+          };
+
+        if (!response.ok) {
+          const message =
+            result.errors?.length
+              ? result.errors.join("\n")
+              : result.error ||
+                "Failed to fetch latest events.";
+
+          alert(message);
+          return;
+        }
+
+        alert(
+          `Inserted: ${result.inserted}\nSkipped duplicates: ${result.skippedDuplicates}`,
+        );
+
+        window.location.reload();
+      } catch {
+        alert(
+          "Something went wrong while fetching latest events.",
+        );
+      } finally {
+        setFetching(false);
+      }
+    };
 
   return (
     <main>
@@ -65,7 +115,7 @@ export function EventsPageContent() {
             MIGO ecosystem.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3 text-sm text-zinc-500">
+          <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-zinc-500">
             <span className="rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1">
               {events.length} missions
             </span>
@@ -73,6 +123,21 @@ export function EventsPageContent() {
             <span className="rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1">
               Live Supabase Data
             </span>
+
+            <button
+              type="button"
+              onClick={
+                handleFetchLatestEvents
+              }
+              disabled={
+                fetching
+              }
+              className="rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-200 transition hover:border-cyan-400/50 hover:bg-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {fetching
+                ? "Fetching..."
+                : "Fetch Latest Events"}
+            </button>
           </div>
         </div>
       </section>
