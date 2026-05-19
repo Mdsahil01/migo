@@ -64,6 +64,10 @@ export async function POST(
         .DISCORD_RESOURCES_WEBHOOK_URL;
 
     if (webhookUrl) {
+        console.log(
+            "RESOURCES WEBHOOK:",
+            webhookUrl,
+          );
       await fetch(webhookUrl, {
         method: "POST",
         headers: {
@@ -71,34 +75,28 @@ export async function POST(
             "application/json",
         },
         body: JSON.stringify({
-          content: `
-📅 Mission Added To Calendar
-
-🎯 Mission:
-${title}
-
-📍 Location:
-${location}
-
-📅 Date:
-${new Date(
-  starts_at,
-).toLocaleString()}
-
-🔗 Registration:
-${
-  registration_link ||
-  "Not provided"
-}
-
-📚 Resources:
-${
-  resources ||
-  "No resources added yet"
-}
-
-✅ Mission synced for MIGO coordination.
-`,
+            content: `
+            📚 Mission Preparation Resources
+            
+            🎯 Mission:
+            ${title}
+            
+            🛠 Preparation phase started.
+            
+            📚 Curated Resources:
+            ${
+              resources ||
+              "No resources added yet"
+            }
+            
+            🔗 Registration Link:
+            ${
+              registration_link ||
+              "Not provided"
+            }
+            
+            🚀 Team coordination is now active.
+            `,
         }),
       });
     }
