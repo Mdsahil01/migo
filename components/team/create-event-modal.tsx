@@ -30,6 +30,9 @@ export function CreateEventModal({
     const [resources, setResources] =
   useState("");
 
+  const [sourceUrl, setSourceUrl] =
+  useState("");
+
   const [startsAt, setStartsAt] =
     useState("");
 
@@ -165,6 +168,17 @@ export function CreateEventModal({
   className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white outline-none"
 />
 
+<input
+  type="url"
+  placeholder="Event source URL (Devfolio, Unstop, etc.)"
+  value={sourceUrl}
+  onChange={(e) =>
+    setSourceUrl(
+      e.target.value,
+    )
+  }
+  className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white outline-none"
+/>
           <input
             type="datetime-local"
             value={startsAt}
