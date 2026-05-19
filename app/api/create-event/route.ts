@@ -57,8 +57,7 @@ export async function POST(
             location,
             registration_link,
             starts_at,
-            status:
-              status || "reviewing",
+            status: "reviewing",
             created_by,
           },
         ]);
