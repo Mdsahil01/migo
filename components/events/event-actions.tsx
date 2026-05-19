@@ -1,6 +1,8 @@
- "use client";
+"use client";
 
 import { useState } from "react";
+
+import { useRouter } from "next/navigation";
 
 type EventActionsProps = {
   eventId: string;
@@ -19,6 +21,8 @@ export function EventActions({
   registration_link,
   resources,
 }: EventActionsProps) {
+  const router = useRouter();
+
   const [loading, setLoading] =
     useState(false);
 
@@ -122,6 +126,55 @@ export function EventActions({
       }
     };
 
+  const deleteMission = async () => {
+    const confirmed = window.confirm(
+      `Delete "${title}" permanently?\n\nThis mission will be removed from the operational pipeline. This cannot be undone.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        "/api/delete-event",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            eventId,
+          }),
+        },
+      );
+
+      const result =
+        await response.json();
+
+      if (!response.ok) {
+        alert(
+          result.error ||
+            "Failed to delete mission",
+        );
+
+        return;
+      }
+
+      router.push("/events");
+      router.refresh();
+    } catch {
+      alert(
+        "Something went wrong while deleting the mission.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const addToGoogleCalendar =
     () => {
       const startDate =
@@ -202,9 +255,19 @@ export function EventActions({
         onClick={
           addToGoogleCalendar
         }
-        className="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+        disabled={loading}
+        className="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10 disabled:opacity-50"
       >
         Add To Google Calendar
+      </button>
+
+      <button
+        type="button"
+        disabled={loading}
+        onClick={deleteMission}
+        className="rounded-xl border border-red-600/40 bg-red-950/40 px-5 py-3 text-sm font-semibold text-red-200 transition hover:border-red-500/50 hover:bg-red-900/50 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        Delete Mission
       </button>
     </div>
   );
