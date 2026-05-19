@@ -1,22 +1,22 @@
-"use client";
+ "use client";
 
 import { useState } from "react";
 
 type EventActionsProps = {
-    eventId: string;
-    title: string;
-    location: string;
-    starts_at: string;
-    registration_link?: string;
-  };
+  eventId: string;
+  title: string;
+  location: string;
+  starts_at: string;
+  registration_link?: string;
+};
 
-  export function EventActions({
-    eventId,
-    title,
-    location,
-    starts_at,
-    registration_link,
-  }: EventActionsProps) {
+export function EventActions({
+  eventId,
+  title,
+  location,
+  starts_at,
+  registration_link,
+}: EventActionsProps) {
   const [loading, setLoading] =
     useState(false);
 
@@ -69,6 +69,58 @@ type EventActionsProps = {
     }
   };
 
+  const addToCalendar =
+    async () => {
+      try {
+        setLoading(true);
+
+        const response =
+          await fetch(
+            "/api/add-to-calendar",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/json",
+              },
+              body: JSON.stringify({
+                eventId,
+                title,
+                location,
+                starts_at,
+                registration_link,
+                resources:
+                  "Preparation resources will be curated soon.",
+              }),
+            },
+          );
+
+        const result =
+          await response.json();
+
+        if (!response.ok) {
+          alert(
+            result.error ||
+              "Failed to add mission to calendar",
+          );
+
+          return;
+        }
+
+        alert(
+          "Mission added to coordination calendar.",
+        );
+
+        window.location.reload();
+      } catch (error) {
+        alert(
+          "Something went wrong.",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
   return (
     <div className="mt-8 flex flex-wrap gap-3">
       <button
@@ -97,6 +149,7 @@ type EventActionsProps = {
 
       <button
         disabled={loading}
+        onClick={addToCalendar}
         className="rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-500/20 disabled:opacity-50"
       >
         Add To Calendar
