@@ -71,7 +71,7 @@ export function EventActions({
     }
   };
 
-  const addToCalendar =
+  const prepareMission =
     async () => {
       try {
         setLoading(true);
@@ -102,14 +102,14 @@ export function EventActions({
         if (!response.ok) {
           alert(
             result.error ||
-              "Failed to add mission to calendar",
+              "Failed to prepare mission",
           );
 
           return;
         }
 
         alert(
-          "Mission added to coordination calendar.",
+          "Mission preparation synced successfully.",
         );
 
         window.location.reload();
@@ -120,6 +120,48 @@ export function EventActions({
       } finally {
         setLoading(false);
       }
+    };
+
+  const addToGoogleCalendar =
+    () => {
+      const startDate =
+        new Date(starts_at)
+          .toISOString()
+          .replace(
+            /[-:]|\.\d+/g,
+            "",
+          );
+
+      const endDate =
+        new Date(
+          new Date(
+            starts_at,
+          ).getTime() +
+            2 *
+              60 *
+              60 *
+              1000,
+        )
+          .toISOString()
+          .replace(
+            /[-:]|\.\d+/g,
+            "",
+          );
+
+      const calendarUrl =
+        `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+          title,
+        )}&details=${encodeURIComponent(
+          resources ||
+            "MIGO Mission",
+        )}&location=${encodeURIComponent(
+          location,
+        )}&dates=${startDate}/${endDate}`;
+
+      window.open(
+        calendarUrl,
+        "_blank",
+      );
     };
 
   return (
@@ -150,10 +192,19 @@ export function EventActions({
 
       <button
         disabled={loading}
-        onClick={addToCalendar}
+        onClick={prepareMission}
         className="rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-3 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-500/20 disabled:opacity-50"
       >
-        Add To Calendar
+        Prepare Mission
+      </button>
+
+      <button
+        onClick={
+          addToGoogleCalendar
+        }
+        className="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+      >
+        Add To Google Calendar
       </button>
     </div>
   );
