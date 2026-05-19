@@ -1,9 +1,6 @@
 import type { EventRecord } from "@/lib/events/types";
 
-import {
-  getEventDetailBody,
-  getEventSummary,
-} from "@/lib/events/description";
+import { getEventHeroSummary } from "@/lib/events/description";
 
 export function formatTeamSize(
   min?: number | null,
@@ -110,34 +107,6 @@ export function shouldShowMapsLink(
   }
 
   return true;
-}
-
-/** Full description block — omitted when it would duplicate the hero summary. */
-export function getEventFullDescriptionSection(
-  event: Pick<
-    EventRecord,
-    | "short_description"
-    | "full_description"
-    | "description"
-  >,
-): string | null {
-  const summary =
-    getEventSummary(event);
-  const full =
-    event.full_description?.trim();
-
-  if (full && full !== summary) {
-    return full;
-  }
-
-  const body =
-    getEventDetailBody(event);
-
-  if (body && body !== summary) {
-    return body;
-  }
-
-  return null;
 }
 
 export function missionStatusBadge(

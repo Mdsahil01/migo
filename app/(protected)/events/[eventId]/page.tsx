@@ -4,17 +4,21 @@ import Link from "next/link";
 
 import { notFound } from "next/navigation";
 
+import { DetailedMissionBriefing } from "@/components/events/detailed-mission-briefing";
 import { EventActions } from "@/components/events/event-actions";
 import { EventStatusBadge } from "@/components/events/event-status-badge";
 import { Navbar } from "@/components/home/navbar";
 import { SiteFooter } from "@/components/home/site-footer";
-import { getEventSummary } from "@/lib/events/description";
+import {
+  getEventDetailedBriefing,
+  getEventHeroSummary,
+  getEventSummary,
+} from "@/lib/events/description";
 import {
   formatDateTime,
   formatMode,
   formatOrganizerType,
   formatTeamSize,
-  getEventFullDescriptionSection,
   getMapsSearchUrl,
   missionStatusBadge,
   shouldShowMapsLink,
@@ -161,7 +165,12 @@ export async function generateMetadata({
   return {
     title: `${event.title} — MIGO`,
     description:
-      getEventSummary(event),
+      getEventHeroSummary(
+        event as EventRecord,
+      ) ||
+      getEventSummary(
+        event as EventRecord,
+      ),
   };
 }
 
@@ -185,13 +194,11 @@ export default async function EventDetailsPage({
   const mission =
     event as EventRecord;
 
-  const summary =
-    getEventSummary(mission);
+  const heroSummary =
+    getEventHeroSummary(mission);
 
-  const fullDescription =
-    getEventFullDescriptionSection(
-      mission,
-    );
+  const detailedBriefing =
+    getEventDetailedBriefing(mission);
 
   const intelligenceItems =
     buildIntelligenceGrid(mission);
@@ -277,9 +284,9 @@ export default async function EventDetailsPage({
                 {mission.title}
               </h1>
 
-              {summary ? (
-                <p className="mt-4 max-w-3xl text-base leading-relaxed text-zinc-300">
-                  {summary}
+              {heroSummary ? (
+                <p className="mt-5 max-w-2xl text-[15px] leading-7 text-zinc-400 sm:text-base sm:leading-relaxed">
+                  {heroSummary}
                 </p>
               ) : null}
 
@@ -422,25 +429,10 @@ export default async function EventDetailsPage({
             />
           </section>
 
-          {/* Full description (lower priority) */}
-          {fullDescription ? (
-            <section
-              aria-labelledby="full-description-heading"
-              className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6 sm:p-8"
-            >
-              <h2
-                id="full-description-heading"
-                className="text-lg font-semibold text-white"
-              >
-                Full mission brief
-              </h2>
-
-              <div className="mt-5 max-w-3xl">
-                <p className="whitespace-pre-wrap text-base leading-relaxed text-zinc-300">
-                  {fullDescription}
-                </p>
-              </div>
-            </section>
+          {detailedBriefing ? (
+            <DetailedMissionBriefing
+              content={detailedBriefing}
+            />
           ) : null}
         </div>
       </main>
