@@ -64,7 +64,7 @@ export async function POST(
     ) {
       await fetch(
         process.env
-          .DISCORD_APPROVAL_WEBHOOK_URL!,
+          .DISCORD_WEBHOOK_URL!,
         {
           method: "POST",
           headers: {
