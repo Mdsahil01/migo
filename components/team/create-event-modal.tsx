@@ -27,6 +27,9 @@ export function CreateEventModal({
       setRegistrationLink,
     ] = useState("");
 
+    const [resources, setResources] =
+  useState("");
+
   const [startsAt, setStartsAt] =
     useState("");
 
@@ -56,6 +59,7 @@ export function CreateEventModal({
             description,
             location,
             registration_link: registrationLink,
+            resources,
             starts_at: startsAt,
             status: "approved",
             created_by: "MIGO Team",
@@ -147,6 +151,17 @@ export function CreateEventModal({
       e.target.value,
     )
   }
+  className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white outline-none"
+/>
+<textarea
+  placeholder="Curated mission resources..."
+  value={resources}
+  onChange={(e) =>
+    setResources(
+      e.target.value,
+    )
+  }
+  rows={5}
   className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white outline-none"
 />
 

@@ -26,6 +26,7 @@ export async function POST(
     const {
       title,
       description,
+      resources,
       location,
       registration_link,
       starts_at,
@@ -56,6 +57,7 @@ export async function POST(
             description,
             location,
             registration_link,
+            resources,
             starts_at,
             status: "reviewing",
             created_by,

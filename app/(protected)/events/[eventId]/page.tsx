@@ -142,6 +142,7 @@ export default async function EventDetailsPage({
   registration_link={
     event.registration_link
   }
+  resources={event.resources}
 />         </div>
           </div>
         </section>

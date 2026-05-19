@@ -8,6 +8,7 @@ type EventActionsProps = {
   location: string;
   starts_at: string;
   registration_link?: string;
+  resources?: string;
 };
 
 export function EventActions({
@@ -16,6 +17,7 @@ export function EventActions({
   location,
   starts_at,
   registration_link,
+  resources,
 }: EventActionsProps) {
   const [loading, setLoading] =
     useState(false);
@@ -89,8 +91,7 @@ export function EventActions({
                 location,
                 starts_at,
                 registration_link,
-                resources:
-                  "Preparation resources will be curated soon.",
+                resources,
               }),
             },
           );
