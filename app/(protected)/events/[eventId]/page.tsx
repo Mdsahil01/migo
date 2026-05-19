@@ -8,6 +8,10 @@ import { Navbar } from "@/components/home/navbar";
 
 import { SiteFooter } from "@/components/home/site-footer";
 
+import {
+  getEventDetailBody,
+  getEventSummary,
+} from "@/lib/events/description";
 import { supabase } from "@/lib/supabase";
 
 import { EventActions } from "@/components/events/event-actions";
@@ -41,7 +45,7 @@ export async function generateMetadata({
   return {
     title: `${event.title} — MIGO`,
     description:
-      event.description,
+      getEventSummary(event),
   };
 }
 
@@ -81,6 +85,12 @@ export default async function EventDetailsPage({
   if (!event) {
     notFound();
   }
+
+  const eventSummary =
+    getEventSummary(event);
+
+  const eventDetailBody =
+    getEventDetailBody(event);
 
   return (
     <div className="min-h-full bg-zinc-950 text-zinc-100">
@@ -131,7 +141,7 @@ export default async function EventDetailsPage({
               </h1>
 
               <p className="mt-5 max-w-3xl text-base leading-relaxed text-zinc-300">
-                {event.description}
+                {eventSummary}
               </p>
 
               <EventActions
@@ -155,8 +165,8 @@ export default async function EventDetailsPage({
                   Mission Overview
                 </h2>
 
-                <p className="mt-4 text-base leading-relaxed text-zinc-300">
-                  {event.description}
+                <p className="mt-4 whitespace-pre-wrap text-base leading-relaxed text-zinc-300">
+                  {eventDetailBody}
                 </p>
               </article>
 
@@ -191,6 +201,22 @@ export default async function EventDetailsPage({
                       event.location
                     }
                   />
+
+                  {event.mode ? (
+                    <InfoRow
+                      label="Mode"
+                      value={event.mode}
+                    />
+                  ) : null}
+
+                  {event.source_platform ? (
+                    <InfoRow
+                      label="Source"
+                      value={
+                        event.source_platform
+                      }
+                    />
+                  ) : null}
 
                   <InfoRow
                     label="Status"

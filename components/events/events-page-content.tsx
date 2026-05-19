@@ -4,16 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 
 import { EventCard } from "@/components/events/event-card";
 
+import { getEventSummary } from "@/lib/events/description";
+import type { EventRecord } from "@/lib/events/types";
 import { supabase } from "@/lib/supabase";
-
-type Event = {
-  id: string;
-  title: string;
-  description: string;
-  location: string;
-  starts_at: string;
-  status: string;
-};
 
 type FetchDevfolioResponse = {
   inserted: number;
@@ -23,7 +16,7 @@ type FetchDevfolioResponse = {
 
 export function EventsPageContent() {
   const [events, setEvents] =
-    useState<Event[]>([]);
+    useState<EventRecord[]>([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -157,7 +150,7 @@ export function EventsPageContent() {
     id: event.id,
     title: event.title,
     description:
-      event.description || "",
+      getEventSummary(event),
     location:
       event.location || "",
     date: new Date(

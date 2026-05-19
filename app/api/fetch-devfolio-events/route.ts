@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 
+import { normalizeDevfolioEvent } from "@/lib/events/devfolio-normalize";
+import type {
+  DevfolioHackathonDetail,
+  DevfolioListHackathon,
+  EventIntelligenceInsert,
+} from "@/lib/events/types";
 import { supabase } from "@/lib/supabase";
 
 const DEVFOLIO_EXPLORE_URL =
@@ -14,60 +20,6 @@ const FETCH_HEADERS = {
   Accept:
     "text/html,application/json",
 };
-
-type DevfolioListHackathon = {
-  slug: string;
-  name: string;
-  starts_at: string;
-  is_online: boolean;
-  settings?: {
-    external_apply_url?:
-      | string
-      | null;
-  };
-};
-
-type DevfolioHackathonDetail = {
-  slug: string;
-  name: string;
-  tagline?: string;
-  desc?: string;
-  starts_at: string;
-  is_online: boolean;
-  city?: string | null;
-  country?: string | null;
-  location?: string | null;
-  hackathon_setting?: {
-    external_apply_url?:
-      | string
-      | null;
-    subdomain?: string;
-  };
-};
-
-type ParsedDevfolioEvent = {
-  title: string;
-  description: string;
-  location: string;
-  registration_link: string;
-  starts_at: string;
-  organizer_name?: string;
-  source_url: string;
-};
-
-function stripMarkdown(
-  text: string,
-): string {
-  return text
-    .replace(/&#013;/g, "\n")
-    .replace(/\*\*/g, "")
-    .replace(
-      /\[([^\]]+)\]\([^)]+\)/g,
-      "$1",
-    )
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-}
 
 function parseExploreHackathons(
   html: string,
@@ -139,75 +91,6 @@ function parseExploreHackathons(
   return [...bySlug.values()];
 }
 
-function buildLocation(
-  detail: DevfolioHackathonDetail,
-): string {
-  if (detail.is_online) {
-    return "Online";
-  }
-
-  if (detail.location) {
-    return detail.location;
-  }
-
-  const parts = [
-    detail.city,
-    detail.country,
-  ].filter(Boolean);
-
-  if (parts.length > 0) {
-    return parts.join(", ");
-  }
-
-  return "Offline";
-}
-
-function inferOrganizerName(
-  title: string,
-): string | undefined {
-  const match = title.match(
-    /^(.+?)['']s\s+/i,
-  );
-
-  return match?.[1]?.trim();
-}
-
-function mapToEvent(
-  listItem: DevfolioListHackathon,
-  detail: DevfolioHackathonDetail,
-): ParsedDevfolioEvent {
-  const source_url = `https://${detail.slug}.devfolio.co/`;
-
-  const registration_link =
-    detail.hackathon_setting
-      ?.external_apply_url ??
-    listItem.settings
-      ?.external_apply_url ??
-    `${source_url}apply`;
-
-  const description = stripMarkdown(
-    detail.desc ||
-      detail.tagline ||
-      `${detail.name} on Devfolio.`,
-  );
-
-  return {
-    title: detail.name,
-    description,
-    location:
-      buildLocation(detail),
-    registration_link,
-    starts_at:
-      detail.starts_at ||
-      listItem.starts_at,
-    organizer_name:
-      inferOrganizerName(
-        detail.name,
-      ),
-    source_url,
-  };
-}
-
 async function fetchHackathonDetail(
   slug: string,
 ): Promise<DevfolioHackathonDetail | null> {
@@ -271,7 +154,10 @@ async function loadExistingUrls(): Promise<{
 }
 
 function isDuplicate(
-  event: ParsedDevfolioEvent,
+  event: Pick<
+    EventIntelligenceInsert,
+    "registration_link" | "source_url"
+  >,
   existing: {
     registrationLinks: Set<string>;
     sourceUrls: Set<string>;
@@ -352,9 +238,14 @@ async function runIngestion() {
         continue;
       }
 
-      const event = mapToEvent(
-        listItem,
-        detail,
+      const event =
+        normalizeDevfolioEvent(
+          listItem,
+          detail,
+        );
+
+      console.log(
+        `[devfolio] normalized: ${event.title} [${event.mode}] tags=${event.tags.length}`,
       );
 
       if (
@@ -373,25 +264,7 @@ async function runIngestion() {
       const { error } =
         await supabase
           .from("events")
-          .insert([
-            {
-              title: event.title,
-              description:
-                event.description,
-              location:
-                event.location,
-              registration_link:
-                event.registration_link,
-              starts_at:
-                event.starts_at,
-              organizer_name:
-                event.organizer_name ??
-                null,
-              source_url:
-                event.source_url,
-              status: "reviewing",
-            },
-          ]);
+          .insert([event]);
 
       if (error) {
         const message = `Insert failed for ${event.title}: ${error.message}`;
