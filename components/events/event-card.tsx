@@ -2,19 +2,29 @@ import type { HackathonEvent } from "@/data/mock-events";
 import Link from "next/link";
 
 import { EventStatusBadge } from "@/components/events/event-status-badge";
+import { SourcePlatformBadge } from "@/components/events/source-platform-badge";
 
 type EventCardProps = {
   event: HackathonEvent;
+  sourcePlatform?: string | null;
 };
 
-export function EventCard({ event }: EventCardProps) {
+export function EventCard({
+  event,
+  sourcePlatform,
+}: EventCardProps) {
   return (
     <article className="group flex h-full flex-col rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-xl shadow-black/30 transition hover:-translate-y-0.5 hover:border-emerald-500/25 hover:bg-zinc-900/80 hover:shadow-emerald-500/5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h2 className="text-lg font-semibold leading-snug text-white transition group-hover:text-emerald-50">
           {event.title}
         </h2>
-        <EventStatusBadge status={event.registrationStatus} />
+        <div className="flex flex-wrap items-center gap-2">
+          <SourcePlatformBadge
+            platform={sourcePlatform}
+          />
+          <EventStatusBadge status={event.registrationStatus} />
+        </div>
       </div>
 
       <p className="mt-2 text-sm text-zinc-400">

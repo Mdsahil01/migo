@@ -2,37 +2,37 @@ import { NextResponse } from "next/server";
 
 import { runIngestionPipeline } from "@/lib/events/ingest";
 
-/** @deprecated Use `/api/fetch-events` for multi-platform ingestion. */
 export async function GET() {
-  return runHandler();
+  return runIngestHandler();
 }
 
 export async function POST() {
-  return runHandler();
+  return runIngestHandler();
 }
 
-async function runHandler() {
+async function runIngestHandler() {
   try {
     const result =
       await runIngestionPipeline();
 
-    return NextResponse.json({
-      inserted: result.inserted,
-      skippedDuplicates:
-        result.skippedDuplicates,
-      errors: result.errors,
-    });
+    return NextResponse.json(result);
   } catch (error) {
     const message =
       error instanceof Error
         ? error.message
         : "Unknown ingestion error";
 
+    console.error(
+      `[ingest] pipeline failed: ${message}`,
+    );
+
     return NextResponse.json(
       {
         inserted: 0,
         skippedDuplicates: 0,
+        skippedLowRelevance: 0,
         errors: [message],
+        bySource: {},
       },
       { status: 500 },
     );

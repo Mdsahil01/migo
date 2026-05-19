@@ -8,10 +8,20 @@ import { getEventSummary } from "@/lib/events/description";
 import type { EventRecord } from "@/lib/events/types";
 import { supabase } from "@/lib/supabase";
 
-type FetchDevfolioResponse = {
+type FetchEventsResponse = {
   inserted: number;
   skippedDuplicates: number;
+  skippedLowRelevance?: number;
   errors?: string[];
+  bySource?: Record<
+    string,
+    {
+      fetched: number;
+      inserted: number;
+      skippedDuplicates: number;
+      skippedLowRelevance: number;
+    }
+  >;
 };
 
 export function EventsPageContent() {
@@ -50,12 +60,12 @@ export function EventsPageContent() {
         setFetching(true);
 
         const response = await fetch(
-          "/api/fetch-devfolio-events",
+          "/api/fetch-events",
           { method: "POST" },
         );
 
         const result =
-          (await response.json()) as FetchDevfolioResponse & {
+          (await response.json()) as FetchEventsResponse & {
             error?: string;
           };
 
@@ -70,8 +80,12 @@ export function EventsPageContent() {
           return;
         }
 
+        const filtered =
+          result.skippedLowRelevance ??
+          0;
+
         alert(
-          `Inserted: ${result.inserted}\nSkipped duplicates: ${result.skippedDuplicates}`,
+          `Inserted: ${result.inserted}\nSkipped duplicates: ${result.skippedDuplicates}\nFiltered (low relevance): ${filtered}`,
         );
 
         window.location.reload();
@@ -102,10 +116,10 @@ export function EventsPageContent() {
           </h1>
 
           <p className="mt-4 max-w-2xl text-base text-zinc-400 sm:text-lg">
-            Review missions, coordinate
-            operations, and manage
-            approved events across the
-            MIGO ecosystem.
+            Bangalore-focused hackathon
+            intelligence — Devfolio, Unstop,
+            and Luma sources filtered for
+            Karnataka tech operations.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-zinc-500">
@@ -128,8 +142,8 @@ export function EventsPageContent() {
               className="rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-200 transition hover:border-cyan-400/50 hover:bg-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {fetching
-                ? "Fetching..."
-                : "Fetch Latest Events"}
+                ? "Syncing..."
+                : "Sync Intelligence"}
             </button>
           </div>
         </div>
@@ -146,24 +160,32 @@ export function EventsPageContent() {
               {events.map((event) => (
                 <li key={event.id}>
                   <EventCard
-  event={{
-    id: event.id,
-    title: event.title,
-    description:
-      getEventSummary(event),
-    location:
-      event.location || "",
-    date: new Date(
-      event.starts_at,
-    ).toLocaleDateString(),
-    organizer: "MIGO",
-    theme: "Mission",
-    teamSize: "Flexible",
-    startsAtIso:
-      event.starts_at,
-    rules: [],
-  } as any}
-/>
+                    sourcePlatform={
+                      event.source_platform
+                    }
+                    event={{
+                      id: event.id,
+                      title: event.title,
+                      description:
+                        getEventSummary(
+                          event,
+                        ),
+                      location:
+                        event.location ||
+                        "",
+                      date: new Date(
+                        event.starts_at,
+                      ).toLocaleDateString(),
+                      organizer:
+                        event.organizer_name ||
+                        "MIGO",
+                      theme: "Mission",
+                      teamSize: "Flexible",
+                      startsAtIso:
+                        event.starts_at,
+                      rules: [],
+                    } as any}
+                  />
                 </li>
               ))}
             </ul>

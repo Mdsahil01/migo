@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 
 import { DetailedMissionBriefing } from "@/components/events/detailed-mission-briefing";
 import { EventActions } from "@/components/events/event-actions";
+import { SourcePlatformBadge } from "@/components/events/source-platform-badge";
 import { EventStatusBadge } from "@/components/events/event-status-badge";
 import { Navbar } from "@/components/home/navbar";
 import { SiteFooter } from "@/components/home/site-footer";
@@ -273,11 +274,11 @@ export default async function EventDetailsPage({
                   )}
                 />
 
-                {mission.source_platform?.trim() ? (
-                  <span className="inline-flex rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-cyan-200">
-                    {mission.source_platform.trim()}
-                  </span>
-                ) : null}
+                <SourcePlatformBadge
+                  platform={
+                    mission.source_platform
+                  }
+                />
               </div>
 
               <h1 className="mt-5 text-3xl font-bold tracking-tight text-white sm:text-4xl">
