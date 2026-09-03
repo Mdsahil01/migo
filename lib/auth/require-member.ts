@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 import { supabase } from "@/lib/supabase";
 
-type AuthorizedMember = {
+export type AuthorizedMember = {
   userId: string;
   email: string;
   member: {
@@ -14,7 +14,7 @@ type AuthorizedMember = {
   };
 };
 
-type RequireMemberResult =
+export type RequireMemberResult =
   | { ok: true; data: AuthorizedMember }
   | { ok: false; response: NextResponse };
 
